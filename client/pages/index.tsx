@@ -4,7 +4,8 @@ import { FaTwitter } from "react-icons/fa";
 import { GoHomeFill } from "react-icons/go";
 import { IoNotifications, IoSearch } from "react-icons/io5";
 import { CiBookmark, CiMail } from "react-icons/ci";
-import { CgProfile } from "react-icons/cg";
+import { CgMoreO, CgProfile } from "react-icons/cg";
+import FeedCard from "@/components/FeedCard";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -48,6 +49,10 @@ const sideBarMenuLists: SidebarMenuButton[] = [
     title: "Profile",
     icon: <CgProfile />
   },
+  {
+    title: "More",
+    icon: <CgMoreO />
+  },
   
 ]
 
@@ -55,7 +60,7 @@ export default function Home() {
   return (
    <div>
     <div className="grid grid-cols-12 h-screen w-screen px-56 ">
-      <div className="pt-8 col-span-3">
+      <div className="pt-2 col-span-3">
         <div className="text-3xl h-fit w-fit hover:bg-gray-800 rounded-full p-2 cursor-pointer transition-all">
           <FaTwitter />
         </div>
@@ -73,7 +78,15 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <div className="col-span-6 border-r-[1px] border-l-[1px] border-gray-400"></div>
+      <div className="col-span-6 border-r-[1px] border-l-[1px] border-gray-600 h-screen scrollable">
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+      </div>
       <div className="col-span-3"></div>
     </div>
    </div>

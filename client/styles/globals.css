@@ -26,3 +26,11 @@ body {
     text-wrap: balance;
   }
 }
+/* Hide scrollbar for WebKit browsers */
+.scrollable {
+  overflow: scroll;
+}
+
+.scrollable::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}
