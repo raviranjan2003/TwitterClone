@@ -7,16 +7,18 @@ export async function initServer() {
     const app = express();
 
     app.use(bodyParser.json());
-    
+
     const graphqlServer = new ApolloServer({
         typeDefs: `
             type Query {
                 sayHello: String
+                sayHelloToMe(name: String!): String
             }
         `,
         resolvers: {
             Query: {
-                sayHello: () => "Hello from GraphQL server"
+                sayHello: () => "Hello from GraphQL server",
+                sayHelloToMe: (parent: any, {name}:{name: string}) => `Hello ${name}`
             }
         }
     });
