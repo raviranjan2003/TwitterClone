@@ -6,6 +6,7 @@ import { IoNotifications, IoSearch } from "react-icons/io5";
 import { CiBookmark, CiMail } from "react-icons/ci";
 import { CgMoreO, CgProfile } from "react-icons/cg";
 import FeedCard from "@/components/FeedCard";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -57,6 +58,11 @@ const sideBarMenuLists: SidebarMenuButton[] = [
 ]
 
 export default function Home() {
+
+  const handleLogin = (cred: CredentialResponse) => {
+    console.log(cred);
+  }
+
   return (
    <div>
     <div className="grid grid-cols-12 h-screen w-screen px-56 ">
@@ -87,7 +93,12 @@ export default function Home() {
         <FeedCard />
         <FeedCard />
       </div>
-      <div className="col-span-3"></div>
+      <div className="col-span-3 p-5">
+        <div className="p-5 bg-slate-700 rounded-lg">
+          <h1 className="my-2 text-xl">New to Twitter?</h1>
+          <GoogleLogin onSuccess={ cred => handleLogin(cred)} />
+        </div>
+      </div>
     </div>
    </div>
   );
