@@ -51,8 +51,7 @@ const queries = {
 
         if(!userInDb) throw new Error("User with email not found !");
 
-        const jwtToken = JWTServices.generateToken(userInDb);
-        console.log(jwtToken);
+        const jwtToken = await JWTServices.generateToken(userInDb);
         return jwtToken;
     }
 }
