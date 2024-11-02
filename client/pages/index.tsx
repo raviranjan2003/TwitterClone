@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import localFont from "next/font/local";
 import { FaTwitter } from "react-icons/fa";
 import { GoHomeFill } from "react-icons/go";
@@ -7,6 +7,9 @@ import { CiBookmark, CiMail } from "react-icons/ci";
 import { CgMoreO, CgProfile } from "react-icons/cg";
 import FeedCard from "@/components/FeedCard";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import toast from "react-hot-toast";
+import { graphqlCLient } from "@/clients/api";
+import { verifyUserGoogleTokenQuery } from "@/graphql/query/user";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -59,9 +62,24 @@ const sideBarMenuLists: SidebarMenuButton[] = [
 
 export default function Home() {
 
-  const handleLogin = (cred: CredentialResponse) => {
+  const handleLogin = useCallback(async (cred: CredentialResponse) => {
     console.log(cred);
-  }
+    const googleToken = cred.credential;
+
+    if(!googleToken) return toast.error("Google Token Not Found");
+
+    const { verifyGoogleToken } = await graphqlCLient.request(
+      verifyUserGoogleTokenQuery, {token: googleToken}
+    )
+
+    toast.success("Verified Success !");
+    console.log(verifyGoogleToken);
+
+    if(verifyGoogleToken) {
+      localStorage.setItem("twitter_token", verifyGoogleToken);
+    }
+    
+  }, [])
 
   return (
    <div>
