@@ -8,8 +8,10 @@ import { CgMoreO, CgProfile } from "react-icons/cg";
 import FeedCard from "@/components/FeedCard";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
-import { graphqlCLient } from "@/clients/api";
+import { graphqlClient } from "@/clients/api";
 import { verifyUserGoogleTokenQuery } from "@/graphql/query/user";
+import { useCurrentUser } from "@/hooks/user";
+import { useQueryClient } from "@tanstack/react-query";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -62,13 +64,17 @@ const sideBarMenuLists: SidebarMenuButton[] = [
 
 export default function Home() {
 
+  const user = useCurrentUser();
+  // console.log("User==>", user.user);
+  const queryClient = useQueryClient();
+
   const handleLogin = useCallback(async (cred: CredentialResponse) => {
     console.log(cred);
     const googleToken = cred.credential;
 
     if(!googleToken) return toast.error("Google Token Not Found");
 
-    const { verifyGoogleToken } = await graphqlCLient.request(
+    const { verifyGoogleToken } = await graphqlClient.request(
       verifyUserGoogleTokenQuery, {token: googleToken}
     )
 
@@ -78,8 +84,10 @@ export default function Home() {
     if(verifyGoogleToken) {
       localStorage.setItem("twitter_token", verifyGoogleToken);
     }
+
+    await queryClient.invalidateQueries({queryKey: ['current-user']});
     
-  }, [])
+  }, [queryClient])
 
   return (
    <div>
@@ -112,10 +120,10 @@ export default function Home() {
         <FeedCard />
       </div>
       <div className="col-span-3 p-5">
-        <div className="p-5 bg-slate-700 rounded-lg">
+        {!user.user &&  (<div className="p-5 bg-slate-700 rounded-lg">
           <h1 className="my-2 text-xl">New to Twitter?</h1>
           <GoogleLogin onSuccess={ cred => handleLogin(cred)} />
-        </div>
+        </div>)}
       </div>
     </div>
    </div>
