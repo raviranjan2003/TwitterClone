@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { prisma } from '../clients/db';
 import { User } from '@prisma/client';
+import { JWTUser } from '../interface';
 
 const jwtSecret = "highsecret";
 
@@ -11,12 +12,21 @@ class JWTServices {
     public static async generateToken (user: User) {
         // const user = await prisma.user.findUnique({ where: { id: userId }});
 
-        const payload = {
+        const payload: JWTUser = {
             id: user?.id,
             email: user?.email
         }
         const token = jwt.sign(payload, jwtSecret);
         return token;
+    }
+
+    public static decode(token: string) {
+        try {
+            return jwt.verify(token, jwtSecret) as JWTUser;
+        } catch (error) {
+            console.log("Error in decoding token", error);
+            return null;
+        }
     }
 }
 
