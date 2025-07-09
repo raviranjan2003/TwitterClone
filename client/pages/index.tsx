@@ -92,7 +92,7 @@ export default function Home() {
   return (
    <div>
     <div className="grid grid-cols-12 h-screen w-screen px-56 ">
-      <div className="pt-2 col-span-3">
+      <div className="pt-2 col-span-3 relative">
         <div className="text-3xl h-fit w-fit hover:bg-gray-800 rounded-full p-2 cursor-pointer transition-all">
           <FaTwitter />
         </div>
@@ -108,7 +108,7 @@ export default function Home() {
           <button className="bg-[#1a8cd8] hover:bg-[#4caced] w-full mt-4 rounded-full py-3 transition-all">
             Post
           </button>
-          <div className="mt-4">
+          <div className="mt-4 absolute bottom-5">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <img src={user.user?.profileImageUrl || ""} alt="profile" className="w-10 h-10 rounded-full" />
