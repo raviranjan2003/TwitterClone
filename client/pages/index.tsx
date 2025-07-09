@@ -12,6 +12,8 @@ import { graphqlClient } from "@/clients/api";
 import { verifyUserGoogleTokenQuery } from "@/graphql/query/user";
 import { useCurrentUser } from "@/hooks/user";
 import { useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
+import { BiImage } from "react-icons/bi";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -89,6 +91,13 @@ export default function Home() {
     
   }, [queryClient])
 
+  const handleImageUpload = useCallback(() => {
+    const file = document.createElement("input");
+    file.setAttribute("type", "file");
+    file.setAttribute("accept", "image/*");
+    file.click();
+  }, [])
+
   return (
    <div>
     <div className="grid grid-cols-12 h-screen w-screen px-56 ">
@@ -119,6 +128,28 @@ export default function Home() {
         </div>
       </div>
       <div className="col-span-6 border-r-[1px] border-l-[1px] border-gray-600 h-screen scrollable">
+      <div className="border border-gray-600 border-l-0 border-r-0 border-b-0 p-4 hover:bg-slate-900 transition-all cursor-pointer">
+        <div className="grid grid-cols-12 ">
+          <div className="col-span-1">
+              <Image 
+                  className='rounded-full'
+                  src={user.user?.profileImageUrl || ""}
+                  alt='user-avatar'
+                  height={50}
+                  width={50}
+              />
+          </div>
+          <div className="col-span-11 pl-2">
+            <textarea className="w-full h-20 bg-transparent border-b-2 border-slate-700 outline-none resize-none text-xl" placeholder="What's happening?" />
+              <div className="flex justify-between items-center">
+                <BiImage className="text-2xl" onClick={handleImageUpload}/>
+                <button className="bg-[#1a8cd8] hover:bg-[#4caced] font-bold py-2 px-4 rounded-full transition-all">
+                  Tweet
+                </button>
+              </div>
+          </div>
+        </div>
+      </div>
         <FeedCard />
         <FeedCard />
         <FeedCard />
