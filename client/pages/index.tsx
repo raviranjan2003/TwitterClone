@@ -65,7 +65,7 @@ const sideBarMenuLists: SidebarMenuButton[] = [
 export default function Home() {
 
   const user = useCurrentUser();
-  // console.log("User==>", user.user);
+  console.log("User==>", user.user?.profileImageUrl);
   const queryClient = useQueryClient();
 
   const handleLogin = useCallback(async (cred: CredentialResponse) => {
@@ -108,6 +108,14 @@ export default function Home() {
           <button className="bg-[#1a8cd8] hover:bg-[#4caced] w-full mt-4 rounded-full py-3 transition-all">
             Post
           </button>
+          <div className="mt-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <img src={user.user?.profileImageUrl || ""} alt="profile" className="w-10 h-10 rounded-full" />
+                <span>{user.user?.firstName} {user.user?.lastName}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="col-span-6 border-r-[1px] border-l-[1px] border-gray-600 h-screen scrollable">
