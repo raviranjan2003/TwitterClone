@@ -21,6 +21,7 @@ export async function initServer() {
 
             type Query {
                 ${User.queries}
+                ${Tweet.queries}
             }
             
             type Mutation {
@@ -32,6 +33,7 @@ export async function initServer() {
                 // sayHello: () => "Hello from GraphQL server",
                 // sayHelloToMe: (parent: any, {name}:{name: string}) => `Hello ${name}`
                 ...User.resolvers.queries,
+                ...Tweet.resolvers.queries,
             },
             Mutation: {
                 ...Tweet.resolvers.mutations,

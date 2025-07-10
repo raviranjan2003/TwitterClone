@@ -7,6 +7,10 @@ interface CreateTweetPayload {
     imageUrl: string
 }
 
+const queries = {
+    getAllTweets: () => prisma.tweet.findMany({ orderBy: { createdAt: "desc" }})
+}
+
 const mutations = {
     createTweet: async (parent: any, { payload }:{ payload: CreateTweetPayload}, ctx: GraphqlContext) => {
         if(!ctx.user) throw new Error("You are not authenticated!");
@@ -27,4 +31,4 @@ const extraResolver = {
         author: (parent: Tweet) => prisma.user.findUnique({ where : { id: parent.authorId }}),
     }
 }
-export const resolvers = { mutations, extraResolver };
+export const resolvers = { mutations, extraResolver, queries };
