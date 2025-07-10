@@ -3,7 +3,10 @@ import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
 import express, { query } from 'express';
 import { User } from './user';
+import { Tweet } from './tweet';
 import cors from 'cors';
+import { GraphqlContext } from '../interface';
+import JWTServices from '../services/jwt';
 
 export async function initServer() {
     const app = express();
@@ -11,12 +14,17 @@ export async function initServer() {
     app.use(bodyParser.json());
     app.use(cors());
 
-    const graphqlServer = new ApolloServer({
+    const graphqlServer = new ApolloServer<GraphqlContext>({
         typeDefs: `
             ${User.types}
+            ${Tweet.types}
 
             type Query {
                 ${User.queries}
+            }
+            
+            type Mutation {
+                ${Tweet.mutations}
             }
         `,
         resolvers: {
@@ -24,13 +32,24 @@ export async function initServer() {
                 // sayHello: () => "Hello from GraphQL server",
                 // sayHelloToMe: (parent: any, {name}:{name: string}) => `Hello ${name}`
                 ...User.resolvers.queries,
+            },
+            Mutation: {
+                ...Tweet.resolvers.mutations,
             }
         }
     });
 
     await graphqlServer.start();
 
-    app.use('/graphql', expressMiddleware(graphqlServer));
+    app.use('/graphql', expressMiddleware(graphqlServer, {
+        context: async ({ req, res }) => {
+            return {
+                user: req.headers.authorization 
+                ? JWTServices.decode(req.headers.authorization.split(" ")[1]) 
+                : undefined
+            }
+        }
+    }));
 
     return app;
 }
