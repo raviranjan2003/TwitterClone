@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import axios from "axios";
 import { prisma } from "../../clients/db";
 import JWTServices from "../../services/jwt";
@@ -66,4 +66,9 @@ const queries = {
     }
 }
 
-export const resolvers = { queries };
+const extraResolver = {
+    User: {
+        tweets: (parent: User) => prisma.tweet.findMany({ where : { author: { id : parent.id }}})
+    }
+}
+export const resolvers = { queries, extraResolver };
