@@ -1,3 +1,4 @@
+import { Tweet } from "@prisma/client";
 import { prisma } from "../../clients/db";
 import { GraphqlContext } from "../../interface";
 
@@ -21,4 +22,9 @@ const mutations = {
     }
 }
 
-export const resolvers = { mutations };
+const extraResolver = {
+    Tweet: {
+        author: (parent: Tweet) => prisma.user.findUnique({ where : { id: parent.authorId }}),
+    }
+}
+export const resolvers = { mutations, extraResolver };
