@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import localFont from "next/font/local";
 import { FaTwitter } from "react-icons/fa";
 import { GoHomeFill } from "react-icons/go";
@@ -14,7 +14,7 @@ import { useCurrentUser } from "@/hooks/user";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { BiImage } from "react-icons/bi";
-import { useGetAllTweets } from "@/hooks/tweet";
+import { useCreateTweet, useGetAllTweets } from "@/hooks/tweet";
 import { Tweet } from "@/gql/graphql";
 
 const geistSans = localFont({
@@ -67,6 +67,9 @@ const sideBarMenuLists: SidebarMenuButton[] = [
 ]
 
 export default function Home() {
+  //state for creating tweet
+  const [content, setContent] = useState("");
+  const { mutate } = useCreateTweet();
 
   const user = useCurrentUser();
   // console.log("User==>", user.user?.profileImageUrl);
@@ -77,7 +80,7 @@ export default function Home() {
   const queryClient = useQueryClient();
 
   const handleLogin = useCallback(async (cred: CredentialResponse) => {
-    console.log(cred);
+    // console.log(cred);
     const googleToken = cred.credential;
 
     if(!googleToken) return toast.error("Google Token Not Found");
@@ -103,6 +106,12 @@ export default function Home() {
     file.setAttribute("accept", "image/*");
     file.click();
   }, [])
+
+  const handleCreateTweet = useCallback(() => {
+    mutate({
+      content,
+    })
+  },[content, mutate]);
 
   return (
    <div>
@@ -146,10 +155,16 @@ export default function Home() {
               />
           </div>
           <div className="col-span-11 pl-2">
-            <textarea className="w-full h-20 bg-transparent border-b-2 border-slate-700 outline-none resize-none text-xl" placeholder="What's happening?" />
+            <textarea 
+              value={content}
+              onChange={e => setContent(e.target.value)}
+              className="w-full h-20 bg-transparent border-b-2 border-slate-700 outline-none resize-none text-xl" placeholder="What's happening?" />
               <div className="flex justify-between items-center">
                 <BiImage className="text-2xl" onClick={handleImageUpload}/>
-                <button className="bg-[#1a8cd8] hover:bg-[#4caced] font-bold py-2 px-4 rounded-full transition-all">
+                <button 
+                  className="bg-[#1a8cd8] hover:bg-[#4caced] font-bold py-2 px-4 rounded-full transition-all"
+                  onClick={handleCreateTweet}
+                >
                   Tweet
                 </button>
               </div>
