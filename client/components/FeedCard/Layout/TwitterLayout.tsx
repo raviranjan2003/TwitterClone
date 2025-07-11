@@ -54,11 +54,11 @@ interface TwitterLayoutProps {
 }
 
 const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
-    //Fetching details of current loggedin user
-    const { user } = useCurrentUser();
+  //Fetching details of current loggedin user
+  const { user } = useCurrentUser();
 
-    const queryClient = useQueryClient();
-    
+  const queryClient = useQueryClient();
+
   const handleLogin = useCallback(
     async (cred: CredentialResponse) => {
       // console.log(cred);
@@ -85,42 +85,47 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
   return (
     <div>
       <div className="grid grid-cols-12 h-screen w-screen px-56 ">
-        <div className="pt-2 col-span-3 relative">
-          <div className="text-3xl h-fit w-fit hover:bg-gray-800 rounded-full p-2 cursor-pointer transition-all">
-            <FaTwitter />
+        <div className="pt-2 col-span-3 flex justify-end pr-4 relative">
+          <div>
+            <div className="text-3xl h-fit w-fit hover:bg-gray-800 rounded-full p-2 cursor-pointer transition-all">
+              <FaTwitter />
+            </div>
+            <div className="mt-4 text-2xl font-medium pr-8">
+              <ul>
+                {sideBarMenuLists.map((item, ind) => (
+                  <li
+                    className="flex justify-start items-center gap-4 hover:bg-gray-800 rounded-full w-fit px-5 py-2 mt-1 cursor-pointer"
+                    key={ind}
+                  >
+                    <span>{item.icon}</span>
+                    <span className="hidden sm:block">{item.title}</span>
+                  </li>
+                ))}
+              </ul>
+              <button className="hidden sm:block bg-[#1a8cd8] hover:bg-[#4caced] w-full mt-4 rounded-full py-3 transition-all">
+                Post
+              </button>
+              <button className="block sm:hidden bg-[#1a8cd8] hover:bg-[#4caced] w-full mt-4 rounded-full py-3 transition-all justify-center items-center"> 
+                <FaTwitter />
+              </button>
+            </div>
           </div>
-          <div className="mt-4 text-2xl font-medium pr-8">
-            <ul>
-              {sideBarMenuLists.map((item, ind) => (
-                <li
-                  className="flex justify-start items-center gap-4 hover:bg-gray-800 rounded-full w-fit px-5 py-2 mt-1 cursor-pointer"
-                  key={ind}
-                >
-                  <span>{item.icon}</span>
-                  <span>{item.title}</span>
-                </li>
-              ))}
-            </ul>
-            <button className="bg-[#1a8cd8] hover:bg-[#4caced] w-full mt-4 rounded-full py-3 transition-all">
-              Post
-            </button>
-            {user && (
-              <div className="mt-4 absolute bottom-5">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={user?.profileImageUrl || ""}
-                      alt="profile"
-                      className="w-10 h-10 rounded-full"
-                    />
-                    <span>
-                      {user?.firstName} {user?.lastName}
-                    </span>
-                  </div>
+          {user && (
+            <div className="mt-4 absolute bottom-5">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <img
+                    src={user?.profileImageUrl || ""}
+                    alt="profile"
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <span className="hidden sm:block">
+                    {user?.firstName} {user?.lastName}
+                  </span>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
         <div className="col-span-6 border-r-[1px] border-l-[1px] border-gray-600 h-screen scrollable">
           {props.children}
