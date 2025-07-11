@@ -14,6 +14,8 @@ import { useCurrentUser } from "@/hooks/user";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { BiImage } from "react-icons/bi";
+import { useGetAllTweets } from "@/hooks/tweet";
+import { Tweet } from "@/gql/graphql";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -67,7 +69,11 @@ const sideBarMenuLists: SidebarMenuButton[] = [
 export default function Home() {
 
   const user = useCurrentUser();
-  console.log("User==>", user.user?.profileImageUrl);
+  // console.log("User==>", user.user?.profileImageUrl);
+
+  const { tweets } = useGetAllTweets();
+  // console.log("tweet==>", tweets);
+  
   const queryClient = useQueryClient();
 
   const handleLogin = useCallback(async (cred: CredentialResponse) => {
@@ -150,13 +156,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-        <FeedCard />
-        <FeedCard />
-        <FeedCard />
-        <FeedCard />
-        <FeedCard />
-        <FeedCard />
-        <FeedCard />
+      {tweets?.map(tweet => <FeedCard key={tweet?.id} data={tweet as Tweet} />)}
+        
       </div>
       <div className="col-span-3 p-5">
         {!user.user &&  (<div className="p-5 bg-slate-700 rounded-lg">
