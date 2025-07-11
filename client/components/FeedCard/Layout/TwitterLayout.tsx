@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { CgMoreO, CgProfile } from "react-icons/cg";
 import { CiBookmark, CiMail } from "react-icons/ci";
 import { FaTwitter } from "react-icons/fa";
@@ -11,43 +11,14 @@ import toast from "react-hot-toast";
 import { graphqlClient } from "@/clients/api";
 import { verifyUserGoogleTokenQuery } from "@/graphql/query/user";
 import { useCurrentUser } from "@/hooks/user";
+import Link from "next/link";
 
 //Interface for Sidebar Buttons
 interface SidebarMenuButton {
   title: String;
   icon: React.ReactNode;
+  link: string;
 }
-
-const sideBarMenuLists: SidebarMenuButton[] = [
-  {
-    title: "Home",
-    icon: <GoHomeFill />,
-  },
-  {
-    title: "Explore",
-    icon: <IoSearch />,
-  },
-  {
-    title: "Notifications",
-    icon: <IoNotifications />,
-  },
-  {
-    title: "Messages",
-    icon: <CiMail />,
-  },
-  {
-    title: "Bookmarks",
-    icon: <CiBookmark />,
-  },
-  {
-    title: "Profile",
-    icon: <CgProfile />,
-  },
-  {
-    title: "More",
-    icon: <CgMoreO />,
-  },
-];
 
 interface TwitterLayoutProps {
   children: React.ReactNode;
@@ -58,6 +29,47 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
   const { user } = useCurrentUser();
 
   const queryClient = useQueryClient();
+
+  const sideBarMenuLists: SidebarMenuButton[] = useMemo(
+    () => [
+      {
+        title: "Home",
+        icon: <GoHomeFill />,
+        link: '/'
+      },
+      {
+        title: "Explore",
+        icon: <IoSearch />,
+        link: '/'
+      },
+      {
+        title: "Notifications",
+        icon: <IoNotifications />,
+        link: '/'
+      },
+      {
+        title: "Messages",
+        icon: <CiMail />,
+        link: '/'
+      },
+      {
+        title: "Bookmarks",
+        icon: <CiBookmark />,
+        link: '/'
+      },
+      {
+        title: "Profile",
+        icon: <CgProfile />,
+        link: `/${user?.id}`
+      },
+      {
+        title: "More",
+        icon: <CgMoreO />,
+        link: '/'
+      },
+    ],
+    []
+  );
 
   const handleLogin = useCallback(
     async (cred: CredentialResponse) => {
@@ -93,19 +105,20 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
             <div className="mt-4 text-2xl font-medium pr-8">
               <ul>
                 {sideBarMenuLists.map((item, ind) => (
-                  <li
-                    className="flex justify-start items-center gap-4 hover:bg-gray-800 rounded-full w-fit px-5 py-2 mt-1 cursor-pointer"
-                    key={ind}
-                  >
-                    <span>{item.icon}</span>
-                    <span className="hidden sm:block">{item.title}</span>
+                  <li key={ind} >
+                    <Link href={item.link}
+                        className="flex justify-start items-center gap-4 hover:bg-gray-800 rounded-full w-fit px-5 py-2 mt-1 cursor-pointer"
+                    >
+                        <span>{item.icon}</span>
+                        <span className="hidden sm:block">{item.title}</span>
+                    </Link>
                   </li>
                 ))}
               </ul>
               <button className="hidden sm:block bg-[#1a8cd8] hover:bg-[#4caced] w-full mt-4 rounded-full py-3 transition-all">
                 Post
               </button>
-              <button className="block sm:hidden bg-[#1a8cd8] hover:bg-[#4caced] w-full mt-4 rounded-full py-3 transition-all justify-center items-center"> 
+              <button className="block sm:hidden bg-[#1a8cd8] hover:bg-[#4caced] w-full mt-4 rounded-full py-3 transition-all justify-center items-center">
                 <FaTwitter />
               </button>
             </div>
