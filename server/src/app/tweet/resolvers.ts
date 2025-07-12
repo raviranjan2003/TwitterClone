@@ -21,9 +21,9 @@ const queries = {
         const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
         
         if(!allowedTypes.includes(imageType)) throw new Error("Unsupported Image Type!");
-
+        console.log(process.env.AWS_S3_BUCKET_NAME);
         const putObjectCommand = new PutObjectCommand({
-            Bucket: "ravi-twitter-image-bucket",
+            Bucket: process.env.AWS_S3_BUCKET_NAME,
             Key: `uploads/${ctx.user.id}/tweets/${imageName}-${Date.now().toString()}.${imageType}`
         })
 
