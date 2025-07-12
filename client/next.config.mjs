@@ -18,6 +18,11 @@ const nextConfig = {
         hostname: 'lh3.googleusercontent.com',
         pathname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'ravi-twitter-image-bucket.s3.ap-south-1.amazonaws.com',
+        pathname: '**',
+      },
     ],
   }
 };
