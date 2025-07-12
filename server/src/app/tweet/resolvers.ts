@@ -1,14 +1,37 @@
 import { Tweet } from "@prisma/client";
 import { prisma } from "../../clients/db";
 import { GraphqlContext } from "../../interface";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl} from "@aws-sdk/s3-request-presigner"
 
 interface CreateTweetPayload {
     content: string;
     imageUrl: string
 }
 
+const s3Client = new S3Client({ 
+    region: process.env.AWS_DEFAULT_REGION,
+});
+
 const queries = {
-    getAllTweets: () => prisma.tweet.findMany({ orderBy: { createdAt: "desc" }})
+    getAllTweets: () => prisma.tweet.findMany({ orderBy: { createdAt: "desc" }}),
+    getPresignedUrl: async (parent: any, { imageName, imageType }:{ imageName: string, imageType: string }, ctx: GraphqlContext)  => {
+        if(!ctx.user || !ctx.user.id) throw new Error("Unauthenticated User!!");
+
+        const allowedTypes = ['jpg', 'jpeg', 'png', 'webp'];
+        
+        if(!allowedTypes.includes(imageType)) throw new Error("Unsupported Image Type!");
+
+        const putObjectCommand = new PutObjectCommand({
+            Bucket: "ravi-twitter-image-bucket",
+            Key: `uploads/${ctx.user.id}/tweets/${imageName}-${Date.now().toString()}.${imageType}`
+        })
+
+        const signedUrl = await getSignedUrl(s3Client, putObjectCommand);
+
+        return signedUrl;
+
+    }
 }
 
 const mutations = {
