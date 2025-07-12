@@ -7,6 +7,7 @@ import { CiBookmark } from 'react-icons/ci';
 import { LuUpload } from 'react-icons/lu';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { Tweet } from '@/gql/graphql';
+import Link from 'next/link';
 
 interface FeedCardProps {
     data: Tweet
@@ -28,7 +29,11 @@ const FeedCard : React.FC<FeedCardProps> = (props) => {
                     />}
                 </div>
                 <div className="col-span-11 pl-2">
-                    <h5>{data.author?.firstName} {data.author?.lastName}</h5>
+                    <h5>
+                        <Link href={`/${data.author?.id}`} className='hover:underline'>
+                            {data.author?.firstName} {data.author?.lastName}
+                        </Link>
+                    </h5>
                     <p>{data?.content}</p>
                     <div className='flex justify-between mt-5 text-xl items-center'>
                         <div>
