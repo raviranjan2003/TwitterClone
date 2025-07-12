@@ -18,7 +18,7 @@ const queries = {
     getPresignedUrl: async (parent: any, { imageName, imageType }:{ imageName: string, imageType: string }, ctx: GraphqlContext)  => {
         if(!ctx.user || !ctx.user.id) throw new Error("Unauthenticated User!!");
 
-        const allowedTypes = ['jpg', 'jpeg', 'png', 'webp'];
+        const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
         
         if(!allowedTypes.includes(imageType)) throw new Error("Unsupported Image Type!");
 
