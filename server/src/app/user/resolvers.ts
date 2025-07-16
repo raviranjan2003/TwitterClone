@@ -17,13 +17,13 @@ const queries = {
         const id = ctx.user?.id;
         if(!id) return null;
 
-        const user = await prisma.user.findUnique({ where : { id }});
+        const user = await UserService.getUserById(id);
 
         if(!user) return "User Not Found !";
         return user;
     },
 
-    getUserById: async (parent: any, { id }: {id: string}, ctx: GraphqlContext) => prisma.user.findUnique({ where: { id }}),
+    getUserById: async (parent: any, { id }: {id: string}, ctx: GraphqlContext) => UserService.getUserById(id),
 }
 
 const extraResolver = {

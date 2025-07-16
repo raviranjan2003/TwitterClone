@@ -53,6 +53,10 @@ class UserService {
         const jwtToken = await JWTServices.generateToken(userInDb);
         return jwtToken;
     }
+
+    public static getUserById(id: string) {
+        return prisma.user.findUnique({ where: { id }});
+    }
 }
 
 export default UserService;

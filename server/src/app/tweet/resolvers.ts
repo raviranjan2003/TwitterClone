@@ -3,6 +3,7 @@ import { prisma } from "../../clients/db";
 import { GraphqlContext } from "../../interface";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl} from "@aws-sdk/s3-request-presigner"
+import UserService from "../../services/user";
 
 interface CreateTweetPayload {
     content: string;
@@ -51,7 +52,7 @@ const mutations = {
 
 const extraResolver = {
     Tweet: {
-        author: (parent: Tweet) => prisma.user.findUnique({ where : { id: parent.authorId }}),
+        author: (parent: Tweet) => UserService.getUserById(parent.authorId),
     }
 }
 export const resolvers = { mutations, extraResolver, queries };
