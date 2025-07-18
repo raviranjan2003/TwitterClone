@@ -32,7 +32,7 @@ const extraResolver = {
       prisma.tweet.findMany({ where: { author: { id: parent.id } } }),
     followers: async (parent: User) => {
       const result = await prisma.follows.findMany({
-        where: { followers: { id: parent.id } },
+        where: { following: { id: parent.id } }, 
         include: { followers: true },
       });
       return result.map(el => el.followers);
